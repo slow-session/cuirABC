@@ -52,9 +52,6 @@ const wssTools = (function () {
     
     return {
         downloadABCFile: downloadABCFile,
-        downloadFile: downloadFile,
-        slugify: slugify,
-        getABCheaderValue: getABCheaderValue,
     };
 })();
 

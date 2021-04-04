@@ -35,7 +35,6 @@
 }
 
 .editHelp {
-    display: none;
     overflow: auto;
     border: 2px solid $brand-color;
     background-color: darken($complimentary-color, 6%);
@@ -51,4 +50,28 @@
 
 .flexColumn {
     flex: 1;
+}
+
+details > summary {
+    width: max-content;
+    list-style-type: none;
+    white-space: nowrap;
+    float: right;
+}
+
+details > summary::marker {
+    display: block;
+}
+
+details summary::before {
+    content: "Show ";
+}
+
+details[open] summary::before {
+    content: "Hide ";
+}
+
+// deprecated in Chrome 89 but needed on Safari
+details > summary::-webkit-details-marker {
+    display: none;
 }

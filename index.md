@@ -13,6 +13,21 @@ import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
 const el = document.createElement('pwa-update');
 document.body.appendChild(el);
 </script>
+<details>
+    <summary class="filterButton">Help</summary>
+    <div class="editHelp">
+        <h3>Help</h3>
+        <ul>
+            <li>The <strong>dots</strong> won't appear at the top of the page until you load a file, cut and paste some ABC into the textarea below or type the details in manually. The page can handle one tune at a time. You should <strong>Reset the Page</strong> between tunes.</li>
+            <li>This page is built as a Progressive Web App which means you can install it as a Web App if you use Chrome on desktop machines and as a desktop app on Android phones.</li> 
+        </ul>
+        <p>The code for this page is freely available on GitHub at <a href="https://github.com/slow-session/editABC/">https://github.com/slow-session/editABC/</a>. Bugs etc to asjl@lpnz.org please!</p>
+
+        <h4>Acknowledgments</h4>
+
+        <p>The page uses the most excellent <strong>abcjs</strong> Javascript tools written by Paul Rosen and Gregory Dyke available <a href="https://www.abcjs.net/">here.</a> Many thanks to them for all their fine work on this.</p>
+    </div>
+</details>
 
 <!-- Draw the dots -->
 <div class="row">
@@ -26,23 +41,6 @@ document.body.appendChild(el);
         <input type="file" id="files" class='filterButton' aria-label="Open ABC file" name="files[]" accept=".abc" />
     </div>
     <output id="fileInfo"></output>
-    <div class="flexColumn">
-        <input value='Show Help' id='help' type='button' class='filterButton' aria-label="Help" onclick='toggleHelp(this)'/>
-    </div>
-</div>
-
-<div id="editHelp" class="row editHelp">
-<h3>Help</h3>
-<ul>
-    <li>The <strong>dots</strong> won't appear at the top of the page until you load a file, cut and paste some ABC into the textarea below or type the details in manually. The page can handle one tune at a time. You should <strong>Reset the Page</strong> between tunes.</li>
-    <li>This page is built as a Progressive Web App which means you can install it as a Web App if you use Chrome on desktop machines and as a desktop app on Android phones.</li> 
-    <li>You may find some interesting behaviour around caching in the browser. This is my first cut at a PWA.</li>
-</ul>
-<p>The code for this page is freely available on GitHub at <a href="https://github.com/slow-session/editABC/">https://github.com/slow-session/editABC/</a>. Bugs etc to asjl@lpnz.org please!</p>
-
-<h4>Acknowledgments</h4>
-
-<p>The page uses the most excellent <strong>abcjs</strong> Javascript tools written by Paul Rosen and Gregory Dyke available <a href="https://www.abcjs.net/">here.</a> Many thanks to them for all their fine work on this.</p>
 </div>
 
 <div class="row">
@@ -101,14 +99,14 @@ function handleABCFileSelect(evt) {
         var reader = new FileReader();
 
         reader.onload = function(e) {
-            // Is ABC file valid?
-            if ((wssTools.getABCheaderValue("X:", this.result) == '')
-                || (wssTools.getABCheaderValue("T:", this.result) == '')
-                || (wssTools.getABCheaderValue("K:", this.result) == '')) { fileInfo.innerHTML = "Invalid ABC file";
-                return (1);
+            // the ABC file should have "X:", "T:", "K:" fields to be valid
+            if (this.result.match(/[XTK]:/g).length >= 3) {
+                // Show the dots
+                fileInfo.innerHTML = '';
+                textAreaABC.value = this.result + "\n";
+            } else {
+                fileInfo.innerHTML = '<h2>Invalid ABC file - missing "X:", "T:", "K:" fields</h2>';
             }
-            // Show the dots
-            textAreaABC.value = this.result + '\n';
             
             // Gross hack to get the ABC to draw after file is loaded
             // The option 'drawABChack' doesn't exist and is silently ignored
@@ -126,18 +124,5 @@ function resetEditABCpage () {
     textAreaABC.value = "";
     document.getElementById('abcWarnings').innerHTML = 'No errors';
     files.value = '';
-}
-
-function toggleHelp(button) {
-    switch (button.value) {
-        case "Show Help":
-            button.value = "Hide Help";
-            document.getElementById('editHelp').style.display= "block" ;
-            break;
-        case "Hide Help":
-            button.value = "Show Help";
-            document.getElementById('editHelp').style.display= "none" ;
-            break;
-    }
 }
 </script>
